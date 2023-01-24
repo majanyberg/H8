@@ -184,10 +184,21 @@ function pretty_print(exp: Exp): string {
     function print_binary(exp:BinaryExp): string{
         const lhs = pretty_print(get_lhs(exp));
         const rhs = pretty_print(get_rhs(exp));
-        if (needs_parentheses(exp)) {
+        if (needs_parentheses2(exp)) {
             return "(" + lhs + get_operator(exp) + rhs + ")";
         } else {
             return lhs + get_operator(exp) + rhs ;
+        }
+    }
+    function needs_parentheses2(exp: BinaryExp): boolean {
+        if (head(exp) === "+" || head(exp) === "-") {
+            return false;
+        } else if (head(exp) === "*" || head(exp) === "/") {
+            const lhs = get_lhs(exp);
+            const rhs = get_rhs(exp);
+            return needs_parentheses2(lhs as BinaryExp) || needs_parentheses2(rhs as BinaryExp);
+        } else {
+            return true;
         }
     }
     if (is_number(exp)){
