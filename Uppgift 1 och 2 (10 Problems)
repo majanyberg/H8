@@ -1,5 +1,5 @@
-import { head, tail, pair, Pair, is_null, list, append } from 'C:/Users/Eric/list';
-import { Tree, make_leaf, make_tree, left_branch, right_branch, value, is_empty_tree, TreeNode } from 'C:/Users/Eric/binary_search_tree';
+import { head, tail, pair, Pair, is_null, list, append } from '../majanyberg/list';
+import { Tree, make_leaf, make_tree, left_branch, right_branch, value, is_empty_tree, TreeNode } from '../majanyberg/binary_search_tree';
 
 /* Type declarations DO NOT MODIFY */
 type Exp = BinaryExp | Variable | Literal | Invalid;
@@ -11,12 +11,12 @@ type Table<K, V> = null | Tree<Pair<K, V>>;
     ONLY add types, and otherwise DO NOT modify the code.
 */
 
-function make_table(): null {
+function make_table(): Table<string,number> |null {
     return null;
 }
 
 // Adds (or updates) a key => value mapping in the table
-function table_insert(t: Table<number, number>, k: number, v: number): Table<number, number> {
+function table_insert(t: Table<string, number>, k: string, v: number): Table<string, number> {
     return t === null
         ? make_leaf(pair(k, v))
         : head(value(t)) === k
@@ -26,11 +26,11 @@ function table_insert(t: Table<number, number>, k: number, v: number): Table<num
         : make_tree(value(t), left_branch(t), table_insert(right_branch(t), k, v));
 }
 
-function table_has_key(t: Table<number, number>, k: number): boolean  {
+function table_has_key(t: Table<string, number>, k: string): boolean  {
     return table_get_value(t, k) !== null;
 }
 
-function table_get_value(t: Table<number, number>, k: number)  {
+function table_get_value(t: Table<string, number>, k: string)  {
     return t === null
         ? null
         : head(value(t)) === k
@@ -40,7 +40,7 @@ function table_get_value(t: Table<number, number>, k: number)  {
         : table_get_value(right_branch(t), k);
 }
 
-function display_table(t: Table<number, number>) {
+function display_table(t: Table<string, number>) {
     function concat(t) {
         return is_empty_tree(t)
             ? ""
@@ -77,11 +77,11 @@ function make_binary_expression(tag: string, lhs: Exp, rhs: Exp): BinaryExp {
     }
 }
 
-function get_lhs(exp: Exp): Exp {
+function get_lhs(exp: BinaryExp): Exp {
     return head(tail(exp));
 }
 
-function get_rhs(exp: Exp): Exp {
+function get_rhs(exp: BinaryExp): Exp {
     return tail(tail(exp));
 }
 
@@ -105,20 +105,20 @@ function make_number(num: number): Literal  {
     return pair("number", num);
 }
 
-function make_variable(name: string): Variable {
+function make_variable(name: string): Exp {
     return pair("variable", name);
 }
 
-function is_binary(exp: Exp): boolean {
+function is_binary(exp: BinaryExp): boolean {
     const tag = head(exp);
     return tag === "+" || tag === "-" || tag === "*" || tag === "/";
 }
 
-function needs_parentheses(exp: Exp): boolean {
+function needs_parentheses(exp: BinaryExp): boolean {
     const tag = head(exp);
     return tag === "+" || tag === "-";
 }
-function get_operator(exp: Exp) { return head(exp); }
+function get_operator(exp: BinaryExp) { return head(exp); }
 
 function is_add(exp: BinaryExp) { return head(exp) === "+"; }
 function is_sub(exp: BinaryExp) { return head(exp) === "-"; }
@@ -132,7 +132,7 @@ function get_value(exp: Literal): any { return tail(exp); }
 function is_variable(exp: Exp): exp is Variable { return head(exp) === "variable"; }
 function get_var_name(exp: Variable): string { return tail(exp); }
 
-function evaluate<V>(exp: Exp, env: Table<string, V>): Exp {
+function evaluate<V>(exp: Exp, env: Table<string, number>): Exp {
     function evaluate_binary(bin_exp) {
         const lhs = evaluate(get_lhs(bin_exp), env);
         const rhs = evaluate(get_rhs(bin_exp), env);
@@ -175,9 +175,8 @@ console.log(evaluate(exp2, table));
 */
 function pretty_print(exp: Exp) {
     
-    
-    
     // write your code here
+
 
 
 }
