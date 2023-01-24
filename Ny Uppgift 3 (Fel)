@@ -1,5 +1,5 @@
-import { head, tail, pair, Pair, is_null, list, append } from '../H8/list';
-import { Tree, make_leaf, make_tree, left_branch, right_branch, value, is_empty_tree, TreeNode } from '../H8/binary_search_tree';
+import { head, tail, pair, Pair, is_null, list, append } from '../majanyberg/list';
+import { Tree, make_leaf, make_tree, left_branch, right_branch, value, is_empty_tree, TreeNode } from '../majanyberg/binary_search_tree';
 
 /* Type declarations DO NOT MODIFY */
 type Exp = BinaryExp | Variable | Literal | Invalid;
@@ -175,18 +175,31 @@ console.log(evaluate(exp2, table));
 */
 function pretty_print(exp: Exp): string {
     
-    if (is_number(exp) || is_variable(exp)) {
-        return get_var_name(exp);
+    function print_variable(exp: Exp): string{
+        return get_var_name(exp as Variable);
+    }
+    function print_literal(exp:Exp): string{
+        return get_var_name(exp as Variable);
+    }
+    function print_binary(exp:BinaryExp): string{
+        const lhs = pretty_print(get_lhs(exp));
+        const rhs = pretty_print(get_rhs(exp));
+        if (needs_parentheses(exp)) {
+            return "(" + lhs + get_operator(exp) + rhs + ")";
+        } else {
+            return lhs + get_operator(exp) + rhs ;
+        }
+    }
+    if (is_number(exp)){
+        return print_literal(exp);
+    } else if (is_variable(exp)){
+        return print_variable(exp);
+        
     } else {
-    const lhs = pretty_print(get_lhs(exp));
-    const rhs = pretty_print(get_rhs(exp));
-    if (needs_parentheses(exp)) {
-        return "(" + lhs + get_operator(exp) + rhs + ")";
-    } else {
-        return lhs + get_operator(exp) + rhs ;
+        return print_binary(exp);
     }
     
-}
+    
 }
 /*
     Test code for task 3
